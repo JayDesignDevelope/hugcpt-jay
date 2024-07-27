@@ -222,3 +222,26 @@ st.markdown("</div></div>", unsafe_allow_html=True)
 if "last_question" in st.session_state and "last_answer" in st.session_state:
     st.markdown(f"<div class='message'><b class='user-query'>Question:</b> {st.session_state['last_question']}</div>", unsafe_allow_html=True)
     typing_effect(st.session_state['last_answer'])
+
+
+# remove ui bar top and down
+hide_streamlit_style = """
+<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+</style>
+
+"""
+st.markdown(
+    r"""
+    <style>
+    .stDeployButton {
+            visibility: hidden;
+        }
+        .st-emotion-cache-1avcm0n{
+            visibility: hidden;
+        }
+    </style>
+    """, unsafe_allow_html=True
+)
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
