@@ -109,6 +109,8 @@ st.markdown("""
         display: flex;
         justify-content: space-around;
         flex-wrap: wrap;
+                    border: none;
+
     }
     .card {
         background-color: #1a73e8;
@@ -126,6 +128,10 @@ st.markdown("""
             border: none;
 
     }
+    
+    h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover .card .card-container .send-butto{{
+            color: black !important;
+        }}
     </style>
 """, unsafe_allow_html=True)
 
