@@ -159,7 +159,7 @@ for q, subtext in quick_questions:
         with st.spinner("Generating answer..."):
             answer = chatbot.chat(f"{pdf_content}\n\nQuestion: {q}")
             st.session_state["last_answer"] = answer.wait_until_done()
-        st.experimental_rerun()
+        st.rerun()
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Function to create typing effect
@@ -186,7 +186,7 @@ if send_button:
         with st.spinner("Generating answer..."):
             answer = chatbot.chat(f"{pdf_content}\n\nQuestion: {user_input}")
             st.session_state["last_answer"] = answer.wait_until_done()
-        st.experimental_rerun()
+        st.rerun()
     else:
         st.warning("Please enter a question.")
 st.markdown("</div></div>", unsafe_allow_html=True)
