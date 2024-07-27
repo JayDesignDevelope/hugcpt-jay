@@ -39,6 +39,9 @@ st.set_page_config(page_title="JayGPT", page_icon=":robot_face:", layout="center
 # Custom CSS for better styling
 st.markdown("""
     <style>
+    .h1{
+    color:black;
+    }
     .main {
         background-color: #f0f2f6;
         padding: 20px;
@@ -96,6 +99,12 @@ st.markdown("""
         border-radius: 5px;
         cursor: pointer;
     }
+    .question-input .send-button:hover {
+    background-color: grey;
+            border: none;
+
+    }
+
     .card-container {
         display: flex;
         justify-content: space-around;
@@ -110,6 +119,12 @@ st.markdown("""
         cursor: pointer;
         text-align: center;
         width: 200px;
+        
+    }
+    .card:hover {
+    background-color: grey;
+            border: none;
+
     }
     </style>
 """, unsafe_allow_html=True)
@@ -118,7 +133,7 @@ st.markdown("""
 st.markdown("""
     <div style="text-align: center; padding: 20px;">
         <img src="https://avatars.githubusercontent.com/u/69631?v=4" style="border-radius: 50%; width: 100px;"/>
-        <h1>JayGPT</h1>
+        <h1 style="color: black;">JayGPT</h1>
         <p style="color: black;">My name is JayGPT, here to assist you about Jay.<br>You can ask me anything about Jay professionally.</p>
     </div>
 """, unsafe_allow_html=True)
