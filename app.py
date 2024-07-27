@@ -1,5 +1,5 @@
 import streamlit as st
-from PyPDF2 import PdfReader
+import  PyPDF2
 from dotenv import load_dotenv
 import os
 from hugchat import hugchat
@@ -13,7 +13,7 @@ PDF_PATH = "./pdf_folder/jaybiodatalatest_ver2.0.pdf"
 
 # Define a function to read the PDF content
 def read_pdf(file_path):
-    reader = PdfReader(file_path)
+    reader = PyPDF2.PdfReader(file_path)
     content = ""
     for page in reader.pages:
         content += page.extract_text()
