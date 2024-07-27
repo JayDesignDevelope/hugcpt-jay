@@ -34,13 +34,13 @@ chatbot = hugchat.ChatBot(cookies=cookies.get_dict())
 pdf_content = read_pdf(PDF_PATH)
 
 # Streamlit UI configuration
-st.set_page_config(page_title="JayGPT", page_icon=":robot_face:", layout="centered")
+st.set_page_config(page_title="JayGPT", page_icon=":robot_face:", layout="wide")
 
 # Custom CSS for better styling
 st.markdown("""
     <style>
-    .h1{
-    color:black;
+    .h1 {
+        color: black;
     }
     .main {
         background-color: #f0f2f6;
@@ -59,6 +59,11 @@ st.markdown("""
         color: black;
         padding: 10px;
         border-radius: 5px;
+        caret-color: black;
+    }
+    .stTextInput>div>div>input:focus {
+        border: 2px solid #1a73e8;
+        box-shadow: 0 0 10px rgba(26, 115, 232, 0.5);
     }
     .message {
         background-color: #ffffff;
@@ -74,6 +79,13 @@ st.markdown("""
     .user-query {
         color: black;
     }
+    .response-container {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
     .question-input {
         position: fixed;
         bottom: 0;
@@ -81,6 +93,11 @@ st.markdown("""
         padding: 10px;
         background-color: #f0f2f6;
         border-top: 1px solid #ddd;
+    }
+    .spinner-text {
+        color: black !important;
+        font-size: 1em;
+        font-weight: bold;
     }
     .question-input > div {
         display: flex;
@@ -100,38 +117,42 @@ st.markdown("""
         cursor: pointer;
     }
     .question-input .send-button:hover {
-    background-color: grey;
-            border: none;
-
+        background-color: grey;
+        border: none;
     }
 
-    .card-container {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-                    border: none;
-
-    }
     .card {
-        background-color: #1a73e8;
-        color: white;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
         border-radius: 10px;
         padding: 20px;
         margin: 10px;
         cursor: pointer;
-        text-align: center;
-        width: 200px;
-        
+        text-align: left;
+        flex: 1 1 30%;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        transition: box-shadow 0.2s ease;
+        min-width: 250px;
     }
     .card:hover {
-    background-color: grey;
-            border: none;
-
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        border: none;
     }
-    
-    h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover .card .card-container .send-butto{{
-            color: black !important;
-        }}
+    .card h3 {
+        margin: 0;
+        color: black;
+    }
+    .card p {
+        color: grey;
+        margin-top: 5px;
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 768px) {
+        .card {
+            flex: 1 1 100%;
+        }
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -144,49 +165,60 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Pre-defined buttons for quick questions in a single row with a squared shape
+# Pre-defined buttons for quick questions styled as cards
 quick_questions = [
-    ("Where did Jay complete his education?", ""),
-    ("What professional certifications does Jay hold?", ""),
-    ("What programming languages does Jay know?", ""),
-    ("What research has Jay published?", "")
+    {"title": "Where did Jay complete his education?", "description": "Education background of Jay"},
+    {"title": "What professional certifications does Jay hold?", "description": "Certifications Jay has earned"},
+    {"title": "What programming languages does Jay know?", "description": "Programming skills of Jay"},
+    {"title": "What research has Jay published?", "description": "Research publications by Jay"}
 ]
 
-st.markdown("<div class='card-container'>", unsafe_allow_html=True)
-for q, subtext in quick_questions:
-    if st.button(q):
-        st.session_state["last_question"] = q
-        with st.spinner("Generating answer..."):
-            answer = chatbot.chat(f"{pdf_content}\n\nQuestion: {q}")
-            st.session_state["last_answer"] = answer.wait_until_done()
-        st.rerun()
-st.markdown("</div>", unsafe_allow_html=True)
+# Initialize session state for user input
+if "user_input" not in st.session_state:
+    st.session_state["user_input"] = ""
 
-# Function to create typing effect
+if "generate_answer" not in st.session_state:
+    st.session_state["generate_answer"] = False
+
+# Card container using Streamlit columns
+columns = st.columns(len(quick_questions))
+for i, q in enumerate(quick_questions):
+    with columns[i]:
+        if st.button(f"{q['title']}"):
+            st.session_state["user_input"] = q['title']
+            st.session_state["generate_answer"] = True
+
+# Function to create word-by-word typing effect
 def typing_effect(text):
     result = ""
-    for char in text:
-        result += char
-        st.markdown(f"<div class='bot-response'>{result}</div>", unsafe_allow_html=True)
-        time.sleep(0.05)
+    response_container = st.empty()
+    words = text.split()
+    for word in words:
+        result += word + " "
+        response_container.markdown(f"<div class='response-container'><div class='bot-response'>{result}</div></div>", unsafe_allow_html=True)
+        time.sleep(0.1)  # Adjust the delay as needed
 
-# Display the current question and answer
-if "last_question" in st.session_state and "last_answer" in st.session_state:
-    st.markdown(f"<div class='message'><b class='user-query'>Question:</b> {st.session_state['last_question']}<br><b class='bot-response'>Answer:</b> {st.session_state['last_answer']}</div>", unsafe_allow_html=True)
 
 # Fixed input box at the bottom
 st.markdown("<div class='question-input'><div>", unsafe_allow_html=True)
 user_input = st.text_input("", placeholder="Ask anything...", key="user_input")
 send_button = st.button("Send", key="send_button")
 
-if send_button:
-    if user_input:
-        st.session_state["last_question"] = user_input
+# Handle sending the user input or generating the answer from the card click
+if send_button or st.session_state["generate_answer"]:
+    if st.session_state["user_input"]:
+        st.session_state["last_question"] = st.session_state["user_input"]
         st.session_state["last_answer"] = ""
-        with st.spinner("Generating answer..."):
-            answer = chatbot.chat(f"{pdf_content}\n\nQuestion: {user_input}")
+        with st.spinner("<div class='spinner-text'>Generating answer...</div>"):
+            answer = chatbot.chat(f"{pdf_content}\n\nQuestion: {st.session_state['user_input']}")
             st.session_state["last_answer"] = answer.wait_until_done()
-        st.rerun()
+        st.session_state["generate_answer"] = False
+        st.experimental_rerun()
     else:
         st.warning("Please enter a question.")
 st.markdown("</div></div>", unsafe_allow_html=True)
+
+# Display the current question and answer
+if "last_question" in st.session_state and "last_answer" in st.session_state:
+    st.markdown(f"<div class='message'><b class='user-query'>Question:</b> {st.session_state['last_question']}</div>", unsafe_allow_html=True)
+    typing_effect(st.session_state['last_answer'])
