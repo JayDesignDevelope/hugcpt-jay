@@ -213,7 +213,7 @@ if send_button or st.session_state["generate_answer"]:
             answer = chatbot.chat(f"{pdf_content}\n\nQuestion: {st.session_state['user_input']}")
             st.session_state["last_answer"] = answer.wait_until_done()
         st.session_state["generate_answer"] = False
-        st.experimental_rerun()
+        st.rerun()
     else:
         st.warning("Please enter a question.")
 st.markdown("</div></div>", unsafe_allow_html=True)
