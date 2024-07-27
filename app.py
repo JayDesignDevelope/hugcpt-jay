@@ -238,10 +238,26 @@ st.markdown(
     .stDeployButton {
             visibility: hidden;
         }
-        .st-emotion-cache-1avcm0n{
-            visibility: hidden;
-        }
+
     </style>
     """, unsafe_allow_html=True
 )
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.markdown("""
+    <style>
+    /* Hide the header */
+    .css-18e3th9 {
+        display: none;
+    header {visibility: hidden;}
+
+    }
+    /* Hide the footer */
+    .css-1outpf7 {
+        display: none;
+    }
+    .st-emotion-cache-h4xjwg ezrtsby2{
+            display: none;
+
+    }
+    </style>
+    """, unsafe_allow_html=True)
