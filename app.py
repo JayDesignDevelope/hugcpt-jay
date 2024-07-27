@@ -255,9 +255,9 @@ st.markdown("""
     .css-1outpf7 {
         display: none;
     }
-    .st-emotion-cache-h4xjwg ezrtsby2{
+    .st-emotion-cache-h4xjwg{
             display: none;
-
+            visibility: hidden;
     }
     </style>
     """, unsafe_allow_html=True)
