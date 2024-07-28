@@ -209,7 +209,7 @@ if send_button or st.session_state["generate_answer"]:
     if st.session_state["user_input"]:
         st.session_state["last_question"] = st.session_state["user_input"]
         st.session_state["last_answer"] = ""
-        with st.spinner("<div class='spinner-text'>Generating answer...</div>"):
+        with st.spinner("Generating answer..."):
             answer = chatbot.chat(f"{pdf_content}\n\nQuestion: {st.session_state['user_input']}")
             st.session_state["last_answer"] = answer.wait_until_done()
         st.session_state["generate_answer"] = False
