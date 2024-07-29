@@ -48,7 +48,7 @@ st.markdown("""
         border-radius: 10px;
     }
     .stButton>button {
-        background-color: #1a73e8;
+        background-color: #79796E;
         color: white;
         border-radius: 5px;
         margin: 5px;
@@ -60,6 +60,10 @@ st.markdown("""
         padding: 10px;
         border-radius: 5px;
         caret-color: black;
+    }
+    
+    .stTextInput>div>div>input::placeholder {
+        color: black;  
     }
     .stTextInput>div>div>input:focus {
         border: 2px solid #1a73e8;
@@ -153,13 +157,17 @@ st.markdown("""
             flex: 1 1 100%;
         }
     }
+
+    .send-icon {
+        font-size: 1.5em;
+    }
     </style>
 """, unsafe_allow_html=True)
 
 # Header
 st.markdown("""
     <div style="text-align: center; padding: 20px;">
-        <img src="https://avatars.githubusercontent.com/u/69631?v=4" style="border-radius: 50%; width: 100px;"/>
+        <img src="https://i.postimg.cc/K4XrqQK5/jaylogo-color.png" style="border-radius:15px; width: 100px;"/>
         <h1 style="color: black;">JayGPT</h1>
         <p style="color: black;">My name is JayGPT, here to assist you about Jay.<br>You can ask me anything about Jay professionally.</p>
     </div>
@@ -169,8 +177,8 @@ st.markdown("""
 quick_questions = [
     {"title": "Where did Jay complete his education?", "description": "Education background of Jay"},
     {"title": "What professional certifications does Jay hold?", "description": "Certifications Jay has earned"},
-    {"title": "What programming languages does Jay know?", "description": "Programming skills of Jay"},
-    {"title": "What research has Jay published?", "description": "Research publications by Jay"}
+    {"title": "What technical skills does Jay' have?", "description": "Programming skills of Jay"},
+    {"title": "Tell me about Jay's Research and Publication?", "description": "Research publications by Jay"}
 ]
 
 # Initialize session state for user input
@@ -198,11 +206,13 @@ def typing_effect(text):
         response_container.markdown(f"<div class='response-container'><div class='bot-response'>{result}</div></div>", unsafe_allow_html=True)
         time.sleep(0.1)  # Adjust the delay as needed
 
-
 # Fixed input box at the bottom
 st.markdown("<div class='question-input'><div>", unsafe_allow_html=True)
-user_input = st.text_input("", placeholder="Ask anything...", key="user_input")
-send_button = st.button("Send", key="send_button")
+col1, col2 = st.columns([9, 1])
+with col1:
+    user_input = st.text_input("", placeholder="Ask anything...", key="user_input", label_visibility="collapsed")
+with col2:
+    send_button = st.button("Ask ➤", key="send_button", use_container_width=True)
 
 # Handle sending the user input or generating the answer from the card click
 if send_button or st.session_state["generate_answer"]:
@@ -222,7 +232,6 @@ st.markdown("</div></div>", unsafe_allow_html=True)
 if "last_question" in st.session_state and "last_answer" in st.session_state:
     st.markdown(f"<div class='message'><b class='user-query'>Question:</b> {st.session_state['last_question']}</div>", unsafe_allow_html=True)
     typing_effect(st.session_state['last_answer'])
-
 
 # remove ui bar top and down
 hide_streamlit_style = """
